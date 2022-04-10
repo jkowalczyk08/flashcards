@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Flashcards</string>
+    <string name="learn_message">Learn</string>
+    <string name="decks_message">Decks</string>
+    <string name="new_flashcard_message">New Flashcard</string>
+    <string name="active_decks_message">Active Decks</string>
+    <string name="easy_message">Easy</string>
+    <string name="medium_message">Medium</string>
+    <string name="hard_message">Hard</string>
+    <string name="finished_learing_message">No more flashcards to learn</string>
+
 </resources>
