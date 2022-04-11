@@ -2,6 +2,8 @@ package com.example.flashcards.data
 
 import com.example.flashcards.model.*
 
+const val EXTRA_SELECTED_DECK = "com.example.flashcards.DECK"
+
 class DecksDatasource {
 
     companion object {
@@ -30,6 +32,26 @@ class DecksDatasource {
             )
         }
 
+        fun loadAllDecks() : List<Deck> {
+            // TODO: finish implementation to get truly active decks
+            return listOf(
+                Deck("all deck1"),
+                Deck("all deck2"),
+                Deck("all deck3"),
+                Deck("all deck4"),
+                Deck("all deck5"),
+                Deck("all deck6"),
+                Deck("all deck7"),
+                Deck("all deck8"),
+                Deck("all deck9"),
+                Deck("all deck10"),
+                Deck("all deck11"),
+                Deck("all deck12"),
+                Deck("all deck13"),
+                Deck("all deck14"),
+            )
+        }
+
         fun getDeckForName(name: String) : Deck {
             // TODO: finish implementation
             val deck = Deck(name)
@@ -47,8 +69,4 @@ class DecksDatasource {
             return LearningList(deck)
         }
     }
-
-
-
-
 }

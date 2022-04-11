@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Flashcards">
         <activity
+            android:name=".SingleDeckActivity"
+            android:exported="false"
+            android:parentActivityName=".DecksActivity" />
+        <activity
             android:name=".FinishedLearningActivity"
             android:exported="false"
-            android:parentActivityName=".LearnActivity"/>
+            android:parentActivityName=".LearnActivity" />
         <activity
             android:name=".LearnDeckActivity"
             android:exported="false"

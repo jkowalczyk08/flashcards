@@ -7,13 +7,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.example.flashcards.data.DecksDatasource
+import com.example.flashcards.data.EXTRA_SELECTED_DECK
 import com.example.flashcards.model.Card
 import com.example.flashcards.model.Deck
 import com.example.flashcards.model.Learnable
 import com.example.flashcards.model.Progress
 import org.w3c.dom.Text
-
-const val EXTRA_SELECTED_DECK = "com.example.flashcards.DECK"
 
 class LearnDeckActivity() : AppCompatActivity() {
 
