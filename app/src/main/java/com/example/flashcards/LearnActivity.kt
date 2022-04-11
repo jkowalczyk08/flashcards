@@ -14,7 +14,7 @@ class LearnActivity : AppCompatActivity() {
         setContentView(R.layout.activity_learn)
 
         // Initialize active decks data
-        val activeDecksDataset = DecksDatasource().loadActiveDecks();
+        val activeDecksDataset = DecksDatasource.loadActiveDecks();
 
         val recyclerView = findViewById<RecyclerView>(R.id.active_decks_recycler_view)
         recyclerView.adapter = DeckItemAdapter(this, activeDecksDataset);
