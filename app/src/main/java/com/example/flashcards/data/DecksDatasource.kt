@@ -56,7 +56,7 @@ class DecksDatasource {
             // TODO: finish implementation
             val deck = Deck(name)
             for(i in 1..5) {
-                deck.add(Card("f$i", "b$i"))
+                deck.add(Card("front$i", "back$i"))
             }
             return deck;
         }

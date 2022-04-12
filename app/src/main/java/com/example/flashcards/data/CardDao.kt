@@ -10,5 +10,5 @@ interface CardDao {
     fun getAllFromDeck(deckName: String): List<CardEntity>
 
     @Query("SELECT * FROM cardEntity WHERE deck_name = :deckName AND next_revision < :date ORDER BY score DESC")
-    fun getActiveFromDeck(deckName: String, date: Date) : List<CardEntity>
+    fun getActiveFromDeck(deckName: String, date: Long) : List<CardEntity>
 }

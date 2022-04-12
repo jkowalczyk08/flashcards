@@ -12,7 +12,7 @@ class CardsDatasource {
             }
             val result = mutableListOf<Card>()
             for(i in 1..20) {
-                result.add(Card("all f$i", "all b$i"))
+                result.add(Card("all front$i", "all back$i"))
             }
 
             return result;

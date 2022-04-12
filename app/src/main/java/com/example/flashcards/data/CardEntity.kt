@@ -21,5 +21,5 @@ data class CardEntity(
     @NonNull @ColumnInfo(name = "front") var front: String,
     @NonNull @ColumnInfo(name = "back") var back: String,
     @NonNull @ColumnInfo(name = "score") var score: Int,
-    @NonNull @ColumnInfo(name = "next_revision") var nextRevision: Date
+    @NonNull @ColumnInfo(name = "next_revision") var nextRevision: Long
     )

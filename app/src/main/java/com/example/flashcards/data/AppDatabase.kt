@@ -1,9 +1,11 @@
 package com.example.flashcards.data
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
+@Database(entities = arrayOf(CardEntity::class, DeckEntity::class), version = 1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun deckDao(): DeckDao
     abstract fun cardDao(): CardDao
@@ -18,7 +20,6 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "app_database")
-                    .createFromAsset("data/decks.db")
                     .build()
                 INSTANCE = instance
 
