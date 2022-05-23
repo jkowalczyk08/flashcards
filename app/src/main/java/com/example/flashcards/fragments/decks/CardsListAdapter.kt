@@ -30,7 +30,6 @@ class CardsListAdapter(private val deck: Deck): RecyclerView.Adapter<CardsListAd
         holder.front.text = currentItem.front
         holder.back.text = currentItem.back
 
-        // TODO
         holder.editCardButton.setOnClickListener {
             val action = EditDeckFragmentDirections.actionEditDeckFragmentToEditCardFragment(deck, currentItem)
             holder.itemView.findNavController().navigate(action)

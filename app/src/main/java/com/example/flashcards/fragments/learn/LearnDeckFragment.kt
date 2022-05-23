@@ -82,7 +82,6 @@ class LearnDeckFragment : Fragment() {
     private fun showQuestion() {
         changeVisibility(false)
         if(!learningList.hasNext()) {
-            // TODO: finish implementation - go to finished learning fragment or something,
             lifecycleScope.launch(Dispatchers.IO) {
                 repository.updateCards(learningList.getCards())
             }
