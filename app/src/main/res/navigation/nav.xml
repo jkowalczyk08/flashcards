@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.flashcards.fragments.home.HomeFragment"
+        android:label="home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_decksFragment"
+            app:destination="@id/decksFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_decksToLearnFragment"
+            app:destination="@id/decksToLearnFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/decksFragment"
+        android:name="com.example.flashcards.fragments.decks.DecksFragment"
+        android:label="decks"
+        tools:layout="@layout/fragment_decks" >
+        <action
+            android:id="@+id/action_decksFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_decksFragment_to_addDeckFragment"
+            app:destination="@id/addDeckFragment" />
+        <action
+            android:id="@+id/action_decksFragment_to_editDeckFragment"
+            app:destination="@id/editDeckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addDeckFragment"
+        android:name="com.example.flashcards.fragments.decks.AddDeckFragment"
+        android:label="new deck"
+        tools:layout="@layout/fragment_add_deck" >
+        <action
+            android:id="@+id/action_addDeckFragment_to_decksFragment"
+            app:destination="@id/decksFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editDeckFragment"
+        android:name="com.example.flashcards.fragments.decks.EditDeckFragment"
+        android:label="edit deck"
+        tools:layout="@layout/fragment_edit_deck" >
+        <action
+            android:id="@+id/action_editDeckFragment_to_decksFragment"
+            app:destination="@id/decksFragment" />
+        <argument
+            android:name="deckToEdit"
+            app:argType="com.example.flashcards.model.Deck" />
+        <action
+            android:id="@+id/action_editDeckFragment_to_addCardFragment"
+            app:destination="@id/addCardFragment" />
+        <action
+            android:id="@+id/action_editDeckFragment_to_editCardFragment"
+            app:destination="@id/editCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCardFragment"
+        android:name="com.example.flashcards.fragments.decks.AddCardFragment"
+        android:label="new card"
+        tools:layout="@layout/fragment_add_card" >
+        <action
+            android:id="@+id/action_addCardFragment_to_editDeckFragment"
+            app:destination="@id/editDeckFragment" />
+        <argument
+            android:name="deckForNewCard"
+            app:argType="com.example.flashcards.model.Deck" />
+    </fragment>
+    <fragment
+        android:id="@+id/decksToLearnFragment"
+        android:name="com.example.flashcards.fragments.learn.DecksToLearnFragment"
+        android:label="learn"
+        tools:layout="@layout/fragment_decks_to_learn" >
+        <action
+            android:id="@+id/action_decksToLearnFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_decksToLearnFragment_to_learnDeckFragment"
+            app:destination="@id/learnDeckFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/learnDeckFragment"
+        android:name="com.example.flashcards.fragments.learn.LearnDeckFragment"
+        android:label="learn"
+        tools:layout="@layout/fragment_learn_deck" >
+        <action
+            android:id="@+id/action_learnDeckFragment_to_decksToLearnFragment"
+            app:destination="@id/decksToLearnFragment" />
+        <argument
+            android:name="deckToLearn"
+            app:argType="com.example.flashcards.model.Deck" />
+    </fragment>
+    <fragment
+        android:id="@+id/editCardFragment"
+        android:name="com.example.flashcards.fragments.decks.EditCardFragment"
+        android:label="edit"
+        tools:layout="@layout/fragment_edit_card" >
+        <action
+            android:id="@+id/action_editCardFragment_to_editDeckFragment"
+            app:destination="@id/editDeckFragment" />
+        <argument
+            android:name="deck"
+            app:argType="com.example.flashcards.model.Deck" />
+        <argument
+            android:name="card"
+            app:argType="com.example.flashcards.model.Card" />
+    </fragment>
+</navigation>

@@ -1,19 +1,23 @@
 package com.example.flashcards.model
 
-import com.example.flashcards.data.DecksDatasource
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.lifecycle.LiveData
 
-class LearningList() : Learnable {
-    var list = mutableListOf<Card>()
+class LearningList(val scoreCalculator: ScoreCalculator) : Learnable {
+
+    val TAG = "LearningList"
+
+    var list = mutableListOf<LearningCard>()
     var index = -1
     var activeCount = 0
 
-    constructor(deck: Deck) : this() {
-        for(card in deck.cards) {
-            if(card.isActive()) {
-                list.add(card)
-                activeCount++
-            }
+    constructor(activeCards: List<Card>, scoreCalculator: ScoreCalculator) : this(scoreCalculator) {
+        for(card in activeCards) {
+            list.add(LearningCard(card, false))
         }
+        activeCount = activeCards.size
     }
 
 
@@ -21,7 +25,7 @@ class LearningList() : Learnable {
         return activeCount > 0
     }
 
-    override fun next(): Card {
+    override fun next(): LearningCard {
         if(!hasNext()) throw IndexOutOfBoundsException()
 
         do {
@@ -29,17 +33,26 @@ class LearningList() : Learnable {
             if(index >= list.size) {
                 index = 0
             }
-        } while (!list[index].isActive())
+        } while (list[index].finished)
 
         return list[index]
     }
 
-    // TODO: maybe its better to store those cards in separate list, and then update all cards at once?
-    override fun saveAnswer(progress: Progress) {
-        DecksDatasource.saveProgress(list[index], progress)
-        if(progress == Progress.EASY) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun logAnswer(progress: Progress) {
+        val evaluation = scoreCalculator.evaluateAnswer(progress, list[index].card.score)
+        if(evaluation.finished) {
+            list[index].finished = true
             activeCount--
         }
+        list[index].card.updateEvaluation(evaluation)
     }
 
+    override fun getCards() : List<Card> {
+        val cards = mutableListOf<Card>()
+        for(learningCard in list) {
+            cards.add(learningCard.card)
+        }
+        return cards
+    }
 }

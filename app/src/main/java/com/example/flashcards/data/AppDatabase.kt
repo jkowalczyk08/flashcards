@@ -4,9 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.flashcards.model.Card
+import com.example.flashcards.model.Converters
+import com.example.flashcards.model.Deck
 
-@Database(entities = arrayOf(CardEntity::class, DeckEntity::class), version = 1)
+@Database(entities = [Card::class, Deck::class], version = 5, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
+
     abstract fun deckDao(): DeckDao
     abstract fun cardDao(): CardDao
 
@@ -20,6 +26,9 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "app_database")
+                    .fallbackToDestructiveMigration()
+                    //.createFromAsset("flashcards.db")
+                    .allowMainThreadQueries()
                     .build()
                 INSTANCE = instance
 

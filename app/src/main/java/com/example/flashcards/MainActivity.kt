@@ -3,29 +3,52 @@ package com.example.flashcards
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.flashcards.data.AppDatabase
+import com.example.flashcards.repository.CardRepository
+import com.example.flashcards.repository.DeckRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+//        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+//        val navController = navHostFragment.navController
+//        setupActionBarWithNavController(navController)
+        logdbinfo()
     }
 
-    /** Called when user taps Learn button */
-    fun goLearn(view: View) {
-        val intent = Intent(this, LearnActivity::class.java)
-        startActivity(intent)
+    override fun onSupportNavigateUp(): Boolean {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
+        return navController.navigateUp()
     }
 
-    /** Called when user taps Decks button */
-    fun goDecks(view: View) {
-        val intent = Intent(this, DecksActivity::class.java)
-        startActivity(intent)
+    private fun cleardb() {
+        this.lifecycleScope.launch(Dispatchers.IO) {
+            AppDatabase.getDatabase(applicationContext).deckDao().removeAll()
+            AppDatabase.getDatabase(applicationContext).cardDao().removeAll()
+        }
     }
 
-    /** Called when user taps New Flashcard button */
-    fun goNewFlashcard(view: View) {
-        val intent = Intent(this, NewFlashcardActivity::class.java)
-        startActivity(intent)
+    private fun logdbinfo() {
+        this.lifecycleScope.launch(Dispatchers.IO) {
+            val decksCount = AppDatabase.getDatabase(applicationContext).deckDao().getAllNotLive().size
+            val cardsCount = AppDatabase.getDatabase(applicationContext).cardDao().getAllNotLive().size
+            Log.i(TAG, "Database has $decksCount decks and $cardsCount cards")
+        }
     }
 }

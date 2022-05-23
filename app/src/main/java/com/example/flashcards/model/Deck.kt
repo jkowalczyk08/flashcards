@@ -1,16 +1,16 @@
 package com.example.flashcards.model
 
-import java.util.*
+import android.os.Parcelable
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-data class Deck(var name: String) {
-    var cards : MutableList<Card> = mutableListOf()
-
-    constructor(name: String, cards: MutableList<Card>) : this(name) {
-        this.cards = cards
-    }
-
-    fun add(card: Card) : Deck {
-        cards.add(card)
-        return this
-    }
-}
+@Parcelize
+@Entity(tableName = "decks")
+data class Deck(
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    @NonNull @ColumnInfo(name = "deck_name") var deckName: String,
+    @NonNull @ColumnInfo(name = "is_active") var isActive: Int
+    ) : Parcelable

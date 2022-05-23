@@ -26,45 +26,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?attr/textAppearanceHeadline6"
-        app:layout_constraintBottom_toTopOf="@+id/medium_button"
+        app:layout_constraintBottom_toTopOf="@+id/medium_button_old"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/flashcard_front" />
 
     <Button
-        android:id="@+id/medium_button"
+        android:id="@+id/medium_button_old"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="reactMediumAnswer"
         android:text="@string/medium_message"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/hard_button"
+        app:layout_constraintEnd_toStartOf="@+id/hard_button_old"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/easy_button"
+        app:layout_constraintStart_toEndOf="@+id/easy_button_old"
         app:layout_constraintTop_toBottomOf="@+id/flashcard_back" />
 
     <Button
-        android:id="@+id/easy_button"
+        android:id="@+id/easy_button_old"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="reactEasyAnswer"
         android:text="@string/easy_message"
-        app:layout_constraintBaseline_toBaselineOf="@+id/medium_button"
-        app:layout_constraintEnd_toStartOf="@+id/medium_button"
+        app:layout_constraintBaseline_toBaselineOf="@+id/medium_button_old"
+        app:layout_constraintEnd_toStartOf="@+id/medium_button_old"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/hard_button"
+        android:id="@+id/hard_button_old"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="reactHardAnswer"
         android:text="@string/hard_message"
-        app:layout_constraintBaseline_toBaselineOf="@+id/medium_button"
+        app:layout_constraintBaseline_toBaselineOf="@+id/medium_button_old"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/medium_button" />
+        app:layout_constraintStart_toEndOf="@+id/medium_button_old" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

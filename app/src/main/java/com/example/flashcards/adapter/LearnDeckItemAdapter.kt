@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.flashcards.LearnDeckActivity
 import com.example.flashcards.R
 import com.example.flashcards.data.EXTRA_SELECTED_DECK
-import com.example.flashcards.model.Deck
+import com.example.flashcards.model.oldDeck
 
 /**
- * Adapter for the [RecyclerView] in [com.example.flashcards.LearnActivity]. Displays [Deck] data object.
+ * Adapter for the [RecyclerView] in [com.example.flashcards.LearnActivity]. Displays [oldDeck] data object.
  */
 class LearnDeckItemAdapter(
     private val context: Context,
-    private val dataset: List<Deck>
+    private val dataset: List<oldDeck>
 ) : RecyclerView.Adapter<LearnDeckItemAdapter.LearnDeckItemViewHolder>() {
 
     // Provide a reference to the views for each data item

@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flashcards.R
-import com.example.flashcards.model.Card
+import com.example.flashcards.model.oldCard
 
 class CardItemAdapter(
     private val context: Context,
-    private val dataset: List<Card>
+    private val dataset: List<oldCard>
     ) : RecyclerView.Adapter<CardItemAdapter.CardItemViewHolder>() {
 
         // Provide a reference to the views for each data item
