@@ -10,30 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Flashcards">
-        <activity
-            android:name=".SingleDeckActivity"
-            android:exported="false"
-            android:parentActivityName=".DecksActivity" />
-        <activity
-            android:name=".FinishedLearningActivity"
-            android:exported="false"
-            android:parentActivityName=".LearnActivity" />
-        <activity
-            android:name=".LearnDeckActivity"
-            android:exported="false"
-            android:parentActivityName=".LearnActivity" />
-        <activity
-            android:name=".NewFlashcardActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".DecksActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".LearnActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
