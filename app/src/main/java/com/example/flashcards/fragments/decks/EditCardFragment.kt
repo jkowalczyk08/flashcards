@@ -11,14 +11,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentEditCardBinding
-import com.example.flashcards.model.Card
 import com.example.flashcards.viewmodels.CardViewModel
-import java.util.*
 
 
 class EditCardFragment : Fragment() {
@@ -43,15 +39,13 @@ class EditCardFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEditCardBinding.inflate(inflater, container, false)
         val view = binding.root
 
         cardViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
 
-        //binding.updateFront.hint = args.card.front
         binding.updateFront.text = Editable.Factory.getInstance().newEditable(args.card.front)
-        //binding.updateBack.hint = args.card.back
         binding.updateBack.text = Editable.Factory.getInstance().newEditable(args.card.back)
         binding.updateCardButton.setOnClickListener {
             updateCardToDatabase()
@@ -81,7 +75,6 @@ class EditCardFragment : Fragment() {
     }
 
     private fun updateCardToDatabase() {
-        val deckId = args.deck.id
         val front = binding.updateFront.text.toString()
         val back = binding.updateBack.text.toString()
 

@@ -5,10 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.example.flashcards.R
-import com.example.flashcards.databinding.FragmentDecksBinding
 import com.example.flashcards.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -34,6 +32,6 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_decksToLearnFragment)
         }
 
-        return view;
+        return view
     }
 }

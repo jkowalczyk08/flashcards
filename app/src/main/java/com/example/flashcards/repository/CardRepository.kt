@@ -23,6 +23,10 @@ class CardRepository(private val cardDao: CardDao) {
         return cardDao.getRevisionFromDeck(deckId, Calendar.getInstance().time)
     }
 
+    fun getDeckIdsForRevision(revisionDate: Date): List<Int> {
+        return cardDao.getDeckIdsForRevision(revisionDate)
+    }
+
     suspend fun addCard(card: Card) {
         Log.i(TAG, "adding card $card")
         cardDao.addCard(card)

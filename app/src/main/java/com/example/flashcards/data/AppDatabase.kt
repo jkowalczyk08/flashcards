@@ -27,7 +27,6 @@ abstract class AppDatabase: RoomDatabase() {
                     AppDatabase::class.java,
                     "app_database")
                     .fallbackToDestructiveMigration()
-                    //.createFromAsset("flashcards.db")
                     .allowMainThreadQueries()
                     .build()
                 INSTANCE = instance

@@ -21,5 +21,6 @@
     <string name="congrats_message">Congratulations!</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="no_more_decks">No more decks to learn</string>
 
 </resources>

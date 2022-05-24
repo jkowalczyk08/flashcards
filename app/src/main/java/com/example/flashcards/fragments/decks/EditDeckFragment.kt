@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -48,7 +47,7 @@ class EditDeckFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         // Inflate the binding and layout for this fragment
         _binding = FragmentEditDeckBinding.inflate(inflater, container, false)
@@ -89,7 +88,7 @@ class EditDeckFragment : Fragment() {
         return view
     }
 
-    private val REQUEST_ENABLE_BT = 3;
+    private val REQUEST_ENABLE_BT = 3
 
     private fun shareDeck() {
         val bluetoothManager: BluetoothManager? = getSystemService(requireContext(), BluetoothManager::class.java)

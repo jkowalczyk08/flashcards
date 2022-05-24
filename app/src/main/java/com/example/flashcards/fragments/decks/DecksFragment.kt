@@ -33,7 +33,7 @@ class DecksFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the binding and layout for this fragment
         _binding = FragmentDecksBinding.inflate(inflater, container, false)
         val view = binding.root

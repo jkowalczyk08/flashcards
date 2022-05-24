@@ -28,7 +28,7 @@ data class Card(
     @NonNull @ColumnInfo(name = "next_revision") var nextRevision: Date
     ) : Parcelable {
 
-    fun updateEvaluation(evaluation: Evaluation) : Unit {
+    fun updateEvaluation(evaluation: Evaluation) {
         score = evaluation.newScore
         nextRevision = evaluation.newRevisionDate
     }

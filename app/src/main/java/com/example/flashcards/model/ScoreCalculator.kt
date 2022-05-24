@@ -1,9 +1,7 @@
 package com.example.flashcards.model
 
 import android.os.Build
-import android.text.format.DateUtils
 import androidx.annotation.RequiresApi
-import java.time.LocalDateTime
 import java.util.*
 
 class ScoreCalculator {

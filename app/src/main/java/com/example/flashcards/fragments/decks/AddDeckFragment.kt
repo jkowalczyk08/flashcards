@@ -34,7 +34,7 @@ class AddDeckFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the binding and layout for this fragment
         _binding = FragmentAddDeckBinding.inflate(inflater, container, false)
         val view = binding.root

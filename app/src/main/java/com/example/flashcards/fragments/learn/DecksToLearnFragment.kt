@@ -11,8 +11,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.R
+import com.example.flashcards.data.AppDatabase
 import com.example.flashcards.databinding.FragmentDecksToLearnBinding
+import com.example.flashcards.repository.CardRepository
 import com.example.flashcards.viewmodels.DeckViewModel
+import java.util.*
 
 
 class DecksToLearnFragment : Fragment() {
@@ -34,7 +37,7 @@ class DecksToLearnFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentDecksToLearnBinding.inflate(inflater, container, false)
         val view = binding.root
@@ -50,6 +53,15 @@ class DecksToLearnFragment : Fragment() {
         deckViewModel.getAllActive.observe(viewLifecycleOwner, Observer { deck ->
             adapter.setData(deck)
         })
+
+        val cardRepository = CardRepository(AppDatabase.getDatabase(requireContext()).cardDao())
+
+        if(cardRepository.getDeckIdsForRevision(Calendar.getInstance().time).isEmpty()) {
+            binding.noMoreDecksMessage.visibility = View.VISIBLE
+        }
+        else {
+            binding.noMoreDecksMessage.visibility = View.INVISIBLE
+        }
 
         return view
     }

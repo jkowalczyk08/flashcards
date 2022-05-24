@@ -1,9 +1,7 @@
 package com.example.flashcards.model
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.LiveData
 
 class LearningList(val scoreCalculator: ScoreCalculator) : Learnable {
 
