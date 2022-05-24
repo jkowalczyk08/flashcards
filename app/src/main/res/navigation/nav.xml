@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_editDeckFragment_to_editCardFragment"
             app:destination="@id/editCardFragment" />
+        <action
+            android:id="@+id/action_editDeckFragment_to_bluetoothDevicesFragment"
+            app:destination="@id/bluetoothDevicesFragment" />
     </fragment>
     <fragment
         android:id="@+id/addCardFragment"
@@ -109,5 +112,17 @@
         <argument
             android:name="card"
             app:argType="com.example.flashcards.model.Card" />
+    </fragment>
+    <fragment
+        android:id="@+id/bluetoothDevicesFragment"
+        android:name="com.example.flashcards.fragments.decks.BluetoothDevicesFragment"
+        android:label="fragment_bluetooth_devices"
+        tools:layout="@layout/fragment_bluetooth_devices" >
+        <action
+            android:id="@+id/action_bluetoothDevicesFragment_to_editDeckFragment"
+            app:destination="@id/editDeckFragment" />
+        <argument
+            android:name="deckToShare"
+            app:argType="com.example.flashcards.model.Deck" />
     </fragment>
 </navigation>

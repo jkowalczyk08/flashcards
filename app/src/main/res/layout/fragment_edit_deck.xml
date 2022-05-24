@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.decks.EditDeckFragment">
 
+    <ImageButton
+        android:id="@+id/shareDeckButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="128dp"
+        android:layout_marginEnd="16dp"
+        android:contentDescription="@string/delete_deck_button_description"
+        android:minHeight="48dp"
+        android:src="@drawable/ic_baseline_bluetooth_24"
+        app:layout_constraintEnd_toStartOf="@+id/deleteDeckButton"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpeakableTextPresentCheck,RedundantDescriptionCheck" />
+
     <TextView
         android:id="@+id/editedDeckName"
         android:layout_width="wrap_content"
@@ -13,7 +26,7 @@
         android:layout_marginTop="128dp"
         android:minHeight="48dp"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/shareDeckButton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
