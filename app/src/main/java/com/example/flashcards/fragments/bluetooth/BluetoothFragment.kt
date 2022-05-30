@@ -17,13 +17,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.view.Window
+import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentBluetoothBinding
 
@@ -41,6 +43,8 @@ class BluetoothFragment : Fragment() {
 
     private var bluetoothAdapter: BluetoothAdapter? = null
 
+    private lateinit var newDevicesArrayAdapter: ArrayAdapter<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,6 +54,7 @@ class BluetoothFragment : Fragment() {
         }
         callback.isEnabled = true
 
+        newDevicesArrayAdapter = ArrayAdapter(requireContext(), R.layout.device_text_view)
 
         // bluetooth
         val bluetoothManager: BluetoothManager? =
@@ -72,18 +77,16 @@ class BluetoothFragment : Fragment() {
 
         // Register for broadcasts when a device is discovered.
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         context?.registerReceiver(receiver, filter)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        context?.unregisterReceiver(receiver)
-    }
 
     private val receiver = object : BroadcastReceiver() {
+
+        private val devicesSet: MutableSet<BluetoothDevice> = mutableSetOf()
+
         @SuppressLint("MissingPermission")
-        // TODO: deal with permissions
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
             when(action) {
@@ -96,11 +99,18 @@ class BluetoothFragment : Fragment() {
                         val deviceName = device.name
                         val deviceHardwareAddress = device.address // MAC address
                         Log.i(TAG, "found device with name: $deviceName and MAC: $deviceHardwareAddress")
+                        if(!devicesSet.contains(device)) {
+                            newDevicesArrayAdapter.add(device.name + "\n" + device.address)
+                            devicesSet.add(device)
+                        }
                     }
+                }
+
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    Log.i(TAG, "discovery finished")
                 }
             }
         }
-
     }
 
     private fun ensureDiscoverable() {
@@ -122,7 +132,6 @@ class BluetoothFragment : Fragment() {
     }
 
     @SuppressLint("MissingPermission")
-    // TODO: deal with permissions
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -156,6 +165,8 @@ class BluetoothFragment : Fragment() {
                 }
                 else {
                     Log.i(TAG, "Device discoverable")
+                    if(bluetoothAdapter?.isDiscovering() == true) bluetoothAdapter?.cancelDiscovery()
+
                     if(bluetoothAdapter?.startDiscovery() == true) {
                         Log.i(TAG, "discovery started")
                     }
@@ -174,8 +185,34 @@ class BluetoothFragment : Fragment() {
         _binding = FragmentBluetoothBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        var newDevicesListView = binding.devicesListView
+        newDevicesListView.adapter = newDevicesArrayAdapter
+        newDevicesListView.setOnItemClickListener(deviceClickListener)
+
         return view
     }
 
+    @SuppressLint("MissingPermission")
+    val deviceClickListener = AdapterView.OnItemClickListener { av, v, p2, p3 ->
+        bluetoothAdapter?.cancelDiscovery()
 
+        if(v is TextView) {
+            Log.i(TAG, "selected device ${v.text}")
+
+        }
+
+    }
+
+
+
+    @SuppressLint("MissingPermission")
+    override fun onDestroy() {
+        super.onDestroy()
+
+        bluetoothAdapter?.cancelDiscovery()
+
+        context?.unregisterReceiver(receiver)
+    }
 }
+
+
