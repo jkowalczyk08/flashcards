@@ -22,5 +22,6 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="no_more_decks">No more decks to learn</string>
+    <string name="bluetooth">Bluetooth</string>
 
 </resources>

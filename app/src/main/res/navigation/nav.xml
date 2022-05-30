@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_decksToLearnFragment"
             app:destination="@id/decksToLearnFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_bluetoothFragment"
+            app:destination="@id/bluetoothFragment" />
     </fragment>
     <fragment
         android:id="@+id/decksFragment"
@@ -124,5 +127,14 @@
         <argument
             android:name="deckToShare"
             app:argType="com.example.flashcards.model.Deck" />
+    </fragment>
+    <fragment
+        android:id="@+id/bluetoothFragment"
+        android:name="com.example.flashcards.fragments.bluetooth.BluetoothFragment"
+        android:label="fragment_bluetooth"
+        tools:layout="@layout/fragment_bluetooth" >
+        <action
+            android:id="@+id/action_bluetoothFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

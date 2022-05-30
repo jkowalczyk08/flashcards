@@ -32,6 +32,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_decksToLearnFragment)
         }
 
+        binding.bluetoothButton.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_bluetoothFragment)
+        }
+
         return view
     }
 }
