@@ -80,42 +80,7 @@ class EditDeckFragment : Fragment() {
             view.findNavController().navigate(action)
         }
 
-        binding.shareDeckButton.setOnClickListener {
-            shareDeck()
-        }
-
-
         return view
-    }
-
-    private val REQUEST_ENABLE_BT = 3
-
-    private fun shareDeck() {
-        val bluetoothManager: BluetoothManager? = getSystemService(requireContext(), BluetoothManager::class.java)
-        val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
-        if(bluetoothAdapter == null) {
-            Toast.makeText(requireContext(), "Device doesn't support Bluetooth", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // If BT is not on, request that it be enabled.
-        // navigateToBTDevicesFragment() will then be called during onActivityResult
-        if(bluetoothAdapter.isEnabled == false) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        }
-        else {
-            navigateToBTDevicesFragment()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_ENABLE_BT) {
-            if(resultCode == Activity.RESULT_OK) {
-                navigateToBTDevicesFragment()
-            }
-        }
     }
 
     private fun navigateToBTDevicesFragment() {

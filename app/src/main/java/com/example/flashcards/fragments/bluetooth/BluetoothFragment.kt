@@ -2,9 +2,7 @@ package com.example.flashcards.fragments.bluetooth
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
+import android.bluetooth.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
@@ -12,6 +10,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +28,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentBluetoothBinding
+import com.example.flashcards.services.BluetoothService
+import java.io.IOException
+import java.util.UUID
 
 
 class BluetoothFragment : Fragment() {
@@ -42,8 +45,17 @@ class BluetoothFragment : Fragment() {
     private val REQUEST_ENABLE_BT = 3
 
     private var bluetoothAdapter: BluetoothAdapter? = null
+    private lateinit var bluetoothService: BluetoothService
 
     private lateinit var newDevicesArrayAdapter: ArrayAdapter<String>
+
+    @SuppressLint("HandlerLeak")
+    private val handler = object: Handler() {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            // TODO: implement this handler
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +66,9 @@ class BluetoothFragment : Fragment() {
         }
         callback.isEnabled = true
 
+        // bluetooth
         newDevicesArrayAdapter = ArrayAdapter(requireContext(), R.layout.device_text_view)
 
-        // bluetooth
         val bluetoothManager: BluetoothManager? =
             ContextCompat.getSystemService(requireContext(), BluetoothManager::class.java)
         bluetoothAdapter = bluetoothManager?.adapter
@@ -79,12 +91,15 @@ class BluetoothFragment : Fragment() {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
         context?.registerReceiver(receiver, filter)
-    }
 
+
+        bluetoothService = BluetoothService(requireContext(), handler, bluetoothAdapter!!)
+        bluetoothService.start()
+    }
 
     private val receiver = object : BroadcastReceiver() {
 
-        private val devicesSet: MutableSet<BluetoothDevice> = mutableSetOf()
+        private val devicesSet = mutableSetOf<BluetoothDevice>()
 
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context, intent: Intent) {
@@ -198,12 +213,11 @@ class BluetoothFragment : Fragment() {
 
         if(v is TextView) {
             Log.i(TAG, "selected device ${v.text}")
-
+            val info = v.text.toString()
+            val address = info.substring(info.length - 17)
+            bluetoothService.connect(bluetoothAdapter!!.getRemoteDevice(address))
         }
-
     }
-
-
 
     @SuppressLint("MissingPermission")
     override fun onDestroy() {
