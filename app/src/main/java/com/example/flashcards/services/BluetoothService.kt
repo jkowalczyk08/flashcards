@@ -86,8 +86,7 @@ class BluetoothService(
 
         Log.i(TAG, "connected to $device")
     }
-
-    public fun stop() {
+    fun stop() {
         Log.i(TAG, "stopping")
 
         if (connectThread != null) {
@@ -106,7 +105,7 @@ class BluetoothService(
         }
     }
 
-    public fun write(out: ByteArray) {
+    fun write(out: ByteArray) {
         if(connectedThread != null) {
             connectedThread!!.write(out)
         }
@@ -132,7 +131,7 @@ class BluetoothService(
                     socket = serverSocket.accept()
                 } catch (e: IOException) {
                     Log.e(TAG, "accept thread failed on serversocket.accept()", e)
-                    break;
+                    break
                 }
             }
 
@@ -167,13 +166,18 @@ class BluetoothService(
             // Always cancel discovery because it will slow down a connection
             bluetoothAdapter.cancelDiscovery()
 
-            socket.connect()
-
+            try {
+                socket.connect()
+            } catch (e: IOException) {
+                Log.e(TAG, "connect thread failed on socket.connect()", e)
+            }
             // Reset the ConnectThread because we're done
             connectThread = null
 
             // Start the connected thread
-            connected(socket, bluetoothDevice)
+            if(socket.isConnected) {
+                connected(socket, bluetoothDevice)
+            }
 
             Log.i(TAG, "end of connect thread")
         }
@@ -195,8 +199,8 @@ class BluetoothService(
         private val outputStream = socket.outputStream
 
         override fun run() {
-            Log.i(TAG, "connected thread started running")
-            var buffer: ByteArray = ByteArray(1024)
+            Log.i(TAG, "connected thread started running, connected to ${socket.remoteDevice}")
+            val buffer = ByteArray(1024)
             var bytes = 0
 
             while(socket.isConnected) {

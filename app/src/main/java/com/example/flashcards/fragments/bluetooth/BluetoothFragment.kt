@@ -17,20 +17,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentBluetoothBinding
 import com.example.flashcards.services.BluetoothService
-import java.io.IOException
-import java.util.UUID
 
 
 class BluetoothFragment : Fragment() {
@@ -130,7 +124,7 @@ class BluetoothFragment : Fragment() {
 
     private fun ensureDiscoverable() {
         val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
         }
         startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE)
     }
@@ -180,7 +174,7 @@ class BluetoothFragment : Fragment() {
                 }
                 else {
                     Log.i(TAG, "Device discoverable")
-                    if(bluetoothAdapter?.isDiscovering() == true) bluetoothAdapter?.cancelDiscovery()
+                    if(bluetoothAdapter?.isDiscovering == true) bluetoothAdapter?.cancelDiscovery()
 
                     if(bluetoothAdapter?.startDiscovery() == true) {
                         Log.i(TAG, "discovery started")
@@ -196,19 +190,19 @@ class BluetoothFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBluetoothBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        var newDevicesListView = binding.devicesListView
+        val newDevicesListView = binding.devicesListView
         newDevicesListView.adapter = newDevicesArrayAdapter
-        newDevicesListView.setOnItemClickListener(deviceClickListener)
+        newDevicesListView.onItemClickListener = deviceClickListener
 
         return view
     }
 
     @SuppressLint("MissingPermission")
-    val deviceClickListener = AdapterView.OnItemClickListener { av, v, p2, p3 ->
+    val deviceClickListener = AdapterView.OnItemClickListener { _, v, _, _ ->
         bluetoothAdapter?.cancelDiscovery()
 
         if(v is TextView) {
