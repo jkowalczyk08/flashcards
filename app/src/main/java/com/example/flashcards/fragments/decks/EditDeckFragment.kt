@@ -83,11 +83,6 @@ class EditDeckFragment : Fragment() {
         return view
     }
 
-    private fun navigateToBTDevicesFragment() {
-        val action = EditDeckFragmentDirections.actionEditDeckFragmentToBluetoothDevicesFragment(args.deckToEdit)
-        findNavController().navigate(action)
-    }
-
     private fun deleteDeck(deck: Deck, view: View){
         val builder = AlertDialog.Builder(requireContext())
         builder.setPositiveButton("Yes") {_, _ ->
