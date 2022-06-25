@@ -48,4 +48,8 @@ class CardRepository(private val cardDao: CardDao) {
         cardDao.deleteCard(card)
         Log.i(TAG, "cards after delete: ${cardDao.getAllNotLive()}")
     }
+
+    fun getAllFromDeckNotLive(deckId: Int): List<Card> {
+        return cardDao.getAllFromDeckNotLive(deckId)
+    }
 }

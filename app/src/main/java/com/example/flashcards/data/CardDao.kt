@@ -16,6 +16,9 @@ interface CardDao {
     @Query("SELECT DISTINCT deck_id FROM cards WHERE next_revision <= :revisionDate")
     fun getDeckIdsForRevision(revisionDate: Date): List<Int>
 
+    @Query("SELECT * FROM cards WHERE deck_id = :deckId")
+    fun getAllFromDeckNotLive(deckId: Int): List<Card>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addCard(card: Card)
 

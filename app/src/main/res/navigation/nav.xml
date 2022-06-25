@@ -121,5 +121,20 @@
         <action
             android:id="@+id/action_bluetoothFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_bluetoothFragment_to_decksToShareFragment"
+            app:destination="@id/decksToShareFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/decksToShareFragment"
+        android:name="com.example.flashcards.fragments.bluetooth.DecksToShareFragment"
+        android:label="fragment_decks_to_share"
+        tools:layout="@layout/fragment_decks_to_share" >
+        <action
+            android:id="@+id/action_decksToShareFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="bluetoothService"
+            app:argType="com.example.flashcards.services.BluetoothService" />
     </fragment>
 </navigation>

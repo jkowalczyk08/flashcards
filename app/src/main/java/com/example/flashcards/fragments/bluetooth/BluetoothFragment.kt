@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentBluetoothBinding
+import com.example.flashcards.model.DeckParser
 import com.example.flashcards.services.BluetoothService
 
 
@@ -43,12 +44,47 @@ class BluetoothFragment : Fragment() {
 
     private lateinit var newDevicesArrayAdapter: ArrayAdapter<String>
 
+    private var deckReceivedStringBuilder = StringBuilder()
+
     @SuppressLint("HandlerLeak")
     private val handler = object: Handler() {
+
+        private val MESSAGE_WRITE = 1;
+        private val MESSAGE_READ = 2;
+
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             // TODO: implement this handler
+
+            when(msg.what) {
+                MESSAGE_WRITE -> {
+                    if(msg.obj is ByteArray) {
+                        val writeMessage = String(msg.obj as ByteArray)
+                        Log.i(TAG, "wrote $writeMessage")
+                    }
+                }
+
+                MESSAGE_READ -> {
+                    if(msg.obj is ByteArray) {
+                        val readBuffer = msg.obj as ByteArray
+                        val readMessage = String(readBuffer, 0, msg.arg1)
+                        Log.i(TAG, "received $readMessage")
+
+                        deckReceivedStringBuilder.append(readMessage)
+
+                        // TODO: should include a case where one '^' was read in a previous message
+                        if(readMessage.substring(readMessage.length-2,readMessage.length) == "^^") {
+                            Log.i(TAG, "received full deck")
+                            val deckPair = DeckParser().ShareableStringToDeck(deckReceivedStringBuilder.toString())
+
+                            // TODO: create deck, add cards to it
+                        }
+                    }
+                }
+            }
         }
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +123,7 @@ class BluetoothFragment : Fragment() {
         context?.registerReceiver(receiver, filter)
 
 
-        bluetoothService = BluetoothService(requireContext(), handler, bluetoothAdapter!!)
+        bluetoothService = BluetoothService(requireContext(), handler, bluetoothAdapter!!, null)
         bluetoothService.start()
     }
 
@@ -198,6 +234,12 @@ class BluetoothFragment : Fragment() {
         newDevicesListView.adapter = newDevicesArrayAdapter
         newDevicesListView.onItemClickListener = deviceClickListener
 
+
+        binding.testBtButton.setOnClickListener {
+            val testString = "test message"
+            bluetoothService.write(testString.toByteArray())
+        }
+
         return view
     }
 
@@ -210,6 +252,9 @@ class BluetoothFragment : Fragment() {
             val info = v.text.toString()
             val address = info.substring(info.length - 17)
             bluetoothService.connect(bluetoothAdapter!!.getRemoteDevice(address))
+
+            val action = BluetoothFragmentDirections.actionBluetoothFragmentToDecksToShareFragment(bluetoothService)
+            findNavController().navigate(action)
         }
     }
 

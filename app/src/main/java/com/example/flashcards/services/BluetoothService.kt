@@ -7,14 +7,20 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.os.Handler
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import java.io.IOException
 
+@Parcelize
 class BluetoothService(
-    private val context: Context,
-    private val handler: Handler,
-    private val bluetoothAdapter: BluetoothAdapter
-    ) {
+    private val context: @RawValue Context,
+    private val handler: @RawValue Handler,
+    private val bluetoothAdapter: @RawValue BluetoothAdapter,
+    private var connectedThread: @RawValue ConnectedThread?
+    ) : Parcelable {
 
     private val TAG = "BluetoothService"
     private val NAME = "Flashcards"
@@ -22,7 +28,10 @@ class BluetoothService(
 
     private var acceptThread: AcceptThread? = null
     private var connectThread: ConnectThread? = null
-    private var connectedThread: ConnectedThread? = null
+    //private var connectedThread: ConnectedThread? = null
+
+    private val MESSAGE_WRITE = 1;
+    private val MESSAGE_READ = 2;
 
     /**
      * Starts the bluetooth service.
@@ -191,7 +200,7 @@ class BluetoothService(
      * This thread runs during a connection with a remote device.
      * It handles all incoming and outgoing transmissions.
      */
-    private inner class ConnectedThread(
+    inner class ConnectedThread(
         private val socket: BluetoothSocket
     ) : Thread() {
 
@@ -204,16 +213,31 @@ class BluetoothService(
             var bytes = 0
 
             while(socket.isConnected) {
-                bytes = inputStream.read(buffer)
+                try {
+                    bytes = inputStream.read(buffer)
+                    Log.i(TAG, "connected thread received $bytes bytes")
 
-                Log.i(TAG, "connected thread received $bytes bytes")
+                    handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget()
+                } catch(e: IOException) {
+                    Log.e(TAG, "disconnected", e)
+                }
+
             }
         }
 
         fun write(buffer: ByteArray) {
-            outputStream.write(buffer)
+            try {
+                outputStream.write(buffer)
 
-            Log.i(TAG,"connected thread wrote to outputStream")
+                Log.i(TAG, "connected thread wrote to outputStream")
+
+                // Share the sent message back to the UI Activity
+                handler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer).sendToTarget()
+
+
+            } catch(e: IOException) {
+                Log.e(TAG, "Exception during write", e)
+            }
         }
 
         fun cancel() {

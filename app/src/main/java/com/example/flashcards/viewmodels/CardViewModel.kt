@@ -23,6 +23,10 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getAllFromDeck(deckId)
     }
 
+    fun getAllFromDeckNotLive(deckId: Int) : List<Card> {
+        return repository.getAllFromDeckNotLive(deckId)
+    }
+
     /*
     * Adds card in the background
      */
