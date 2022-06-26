@@ -58,10 +58,8 @@ class AddDeckFragment : Fragment() {
             Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
 
             // Navigate Back
-            //findNavController().navigate(R.id.action_addDeckFragment_to_decksFragment)
+            findNavController().navigate(R.id.action_addDeckFragment_to_decksFragment)
 
-            // clear EditText
-            binding.deckNameEditText.text.clear()
         } else {
             Toast.makeText(requireContext(), "Please fill out the name.", Toast.LENGTH_SHORT).show()
         }
