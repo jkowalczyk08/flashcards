@@ -23,11 +23,10 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.flashcards.R
+import com.example.flashcards.constants.BluetoothConstants
 import com.example.flashcards.databinding.FragmentBluetoothBinding
-import com.example.flashcards.model.Deck
 import com.example.flashcards.model.DeckParser
 import com.example.flashcards.services.BluetoothService
 import com.example.flashcards.viewmodels.DeckViewModel
@@ -56,22 +55,20 @@ class BluetoothFragment : Fragment() {
     @SuppressLint("HandlerLeak")
     private val handler = object: Handler() {
 
-        private val MESSAGE_WRITE = 1;
-        private val MESSAGE_READ = 2;
+        private val Constants = BluetoothConstants.Constants
 
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            // TODO: implement this handler
 
             when(msg.what) {
-                MESSAGE_WRITE -> {
+                Constants.MESSAGE_WRITE -> {
                     if(msg.obj is ByteArray) {
                         val writeMessage = String(msg.obj as ByteArray)
                         Log.i(TAG, "wrote $writeMessage")
                     }
                 }
 
-                MESSAGE_READ -> {
+                Constants.MESSAGE_READ -> {
                     if(msg.obj is ByteArray) {
                         val readBuffer = msg.obj as ByteArray
                         val readMessage = String(readBuffer, 0, msg.arg1)
@@ -82,7 +79,7 @@ class BluetoothFragment : Fragment() {
                         // TODO: should include a case where one '^' was read in a previous message
                         if(readMessage.substring(readMessage.length-2,readMessage.length) == "^^") {
                             Log.i(TAG, "received full deck")
-                            val deckPair = DeckParser().ShareableStringToDeck(deckReceivedStringBuilder.toString())
+                            val deckPair = DeckParser().shareableStringToDeck(deckReceivedStringBuilder.toString())
                             deckReceivedStringBuilder.clear()
 
                             val deckName = deckPair.first
@@ -92,7 +89,7 @@ class BluetoothFragment : Fragment() {
                             builder.setPositiveButton("Yes") {_, _ ->
                                 deckViewModel.importDeck(deckName, primitiveCards)
                                 Toast.makeText(requireContext(), "\"$deckName\" Added successfully!", Toast.LENGTH_SHORT).show()
-                                findNavController().navigate(R.id.action_bluetoothFragment_to_homeFragment)
+//                                findNavController().navigate(R.id.action_bluetoothFragment_to_homeFragment)
                             }
                             builder.setNegativeButton("No") {_, _ ->
                                 Toast.makeText(requireContext(), "Deck rejected", Toast.LENGTH_SHORT).show()
@@ -102,6 +99,18 @@ class BluetoothFragment : Fragment() {
                                 .show()
                         }
                     }
+                }
+                Constants.MESSAGE_CONNECTED -> {
+                    Toast.makeText(requireContext(), "Device connected", Toast.LENGTH_SHORT).show()
+
+                    val action = BluetoothFragmentDirections.actionBluetoothFragmentToDecksToShareFragment(bluetoothService)
+                    findNavController().navigate(action)
+                }
+                Constants.MESSAGE_DISCONNECTED -> {
+                    Toast.makeText(requireContext(), "Device disconnected", Toast.LENGTH_SHORT).show()
+                }
+                Constants.MESSAGE_CONNECT_FAILED -> {
+                    Toast.makeText(requireContext(), "Unable to connect", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -276,9 +285,7 @@ class BluetoothFragment : Fragment() {
             val info = v.text.toString()
             val address = info.substring(info.length - 17)
             bluetoothService.connect(bluetoothAdapter!!.getRemoteDevice(address))
-
-            val action = BluetoothFragmentDirections.actionBluetoothFragmentToDecksToShareFragment(bluetoothService)
-            findNavController().navigate(action)
+            // change of fragment occurs in handler, after MESSAGE_CONNECTED is received
         }
     }
 

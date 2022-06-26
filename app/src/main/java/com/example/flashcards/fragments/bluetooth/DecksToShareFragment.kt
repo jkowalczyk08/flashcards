@@ -36,6 +36,7 @@ class DecksToShareFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            args.bluetoothService.stop()
             findNavController().navigate(R.id.action_decksToShareFragment_to_homeFragment)
         }
         callback.isEnabled = true

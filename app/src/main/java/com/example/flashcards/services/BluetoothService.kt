@@ -10,6 +10,7 @@ import android.os.Handler
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
+import com.example.flashcards.constants.BluetoothConstants
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 import java.io.IOException
@@ -30,8 +31,7 @@ class BluetoothService(
     private var connectThread: ConnectThread? = null
     //private var connectedThread: ConnectedThread? = null
 
-    private val MESSAGE_WRITE = 1;
-    private val MESSAGE_READ = 2;
+    private val Constants = BluetoothConstants.Constants
 
     /**
      * Starts the bluetooth service.
@@ -179,6 +179,7 @@ class BluetoothService(
                 socket.connect()
             } catch (e: IOException) {
                 Log.e(TAG, "connect thread failed on socket.connect()", e)
+                handler.obtainMessage(Constants.MESSAGE_CONNECT_FAILED).sendToTarget()
             }
             // Reset the ConnectThread because we're done
             connectThread = null
@@ -209,6 +210,9 @@ class BluetoothService(
 
         override fun run() {
             Log.i(TAG, "connected thread started running, connected to ${socket.remoteDevice}")
+
+            handler.obtainMessage(Constants.MESSAGE_CONNECTED).sendToTarget()
+
             val buffer = ByteArray(1024)
             var bytes = 0
 
@@ -217,11 +221,13 @@ class BluetoothService(
                     bytes = inputStream.read(buffer)
                     Log.i(TAG, "connected thread received $bytes bytes")
 
-                    handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget()
+                    handler.obtainMessage(Constants.MESSAGE_READ, bytes, -1, buffer).sendToTarget()
                 } catch(e: IOException) {
                     Log.e(TAG, "disconnected", e)
-                }
+                    handler.obtainMessage(Constants.MESSAGE_DISCONNECTED).sendToTarget()
 
+                    cancel()
+                }
             }
         }
 
@@ -232,7 +238,7 @@ class BluetoothService(
                 Log.i(TAG, "connected thread wrote to outputStream")
 
                 // Share the sent message back to the UI Activity
-                handler.obtainMessage(MESSAGE_WRITE, -1, -1, buffer).sendToTarget()
+                handler.obtainMessage(Constants.MESSAGE_WRITE, -1, -1, buffer).sendToTarget()
 
 
             } catch(e: IOException) {
