@@ -23,4 +23,7 @@ interface DeckDao {
 
     @Query("SELECT * FROM decks")
     suspend fun getAllNotLive() : List<Deck>
+
+    @Query("SELECT id FROM decks WHERE deck_name = :deckName")
+    fun getDeckIdForName(deckName: String) : List<Int>
 }

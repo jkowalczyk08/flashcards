@@ -2,6 +2,7 @@ package com.example.flashcards.fragments.bluetooth
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.bluetooth.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -21,11 +22,15 @@ import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.flashcards.R
 import com.example.flashcards.databinding.FragmentBluetoothBinding
+import com.example.flashcards.model.Deck
 import com.example.flashcards.model.DeckParser
 import com.example.flashcards.services.BluetoothService
+import com.example.flashcards.viewmodels.DeckViewModel
 
 
 class BluetoothFragment : Fragment() {
@@ -45,6 +50,8 @@ class BluetoothFragment : Fragment() {
     private lateinit var newDevicesArrayAdapter: ArrayAdapter<String>
 
     private var deckReceivedStringBuilder = StringBuilder()
+
+    private lateinit var deckViewModel: DeckViewModel
 
     @SuppressLint("HandlerLeak")
     private val handler = object: Handler() {
@@ -76,8 +83,23 @@ class BluetoothFragment : Fragment() {
                         if(readMessage.substring(readMessage.length-2,readMessage.length) == "^^") {
                             Log.i(TAG, "received full deck")
                             val deckPair = DeckParser().ShareableStringToDeck(deckReceivedStringBuilder.toString())
+                            deckReceivedStringBuilder.clear()
 
-                            // TODO: create deck, add cards to it
+                            val deckName = deckPair.first
+                            val primitiveCards = deckPair.second
+
+                            val builder = AlertDialog.Builder(requireContext())
+                            builder.setPositiveButton("Yes") {_, _ ->
+                                deckViewModel.importDeck(deckName, primitiveCards)
+                                Toast.makeText(requireContext(), "\"$deckName\" Added successfully!", Toast.LENGTH_SHORT).show()
+                                findNavController().navigate(R.id.action_bluetoothFragment_to_homeFragment)
+                            }
+                            builder.setNegativeButton("No") {_, _ ->
+                                Toast.makeText(requireContext(), "Deck rejected", Toast.LENGTH_SHORT).show()
+                            }
+                            builder.setMessage("You have received \"$deckName\". Do you want to add this deck?")
+                                .create()
+                                .show()
                         }
                     }
                 }
@@ -239,6 +261,8 @@ class BluetoothFragment : Fragment() {
             val testString = "test message"
             bluetoothService.write(testString.toByteArray())
         }
+
+        deckViewModel = ViewModelProvider(this).get(DeckViewModel::class.java)
 
         return view
     }
