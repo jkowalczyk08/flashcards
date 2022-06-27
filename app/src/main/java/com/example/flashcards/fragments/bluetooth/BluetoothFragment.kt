@@ -265,12 +265,6 @@ class BluetoothFragment : Fragment() {
         newDevicesListView.adapter = newDevicesArrayAdapter
         newDevicesListView.onItemClickListener = deviceClickListener
 
-
-        binding.testBtButton.setOnClickListener {
-            val testString = "test message"
-            bluetoothService.write(testString.toByteArray())
-        }
-
         deckViewModel = ViewModelProvider(this).get(DeckViewModel::class.java)
 
         return view

@@ -27,7 +27,6 @@ class ShareDeckListAdapter(private val decksToShareFragment: DecksToShareFragmen
         holder.selectDeckButton.text = currentItem.deckName
 
         holder.selectDeckButton.setOnClickListener {
-            // TODO: share selected deck
             decksToShareFragment.shareDeck(currentItem)
         }
     }
