@@ -33,8 +33,8 @@ class DeckRepository(private val deckDao: DeckDao, private val cardDao: CardDao)
         deckDao.deleteDeck(deck)
     }
 
-    fun getDeckIdForName(deckName: String) : Int {
-        return deckDao.getDeckIdForName(deckName)[0]
+    fun getDecksIdsForName(deckName: String) : List<Int> {
+        return deckDao.getDeckIdForName(deckName)
     }
 
 }

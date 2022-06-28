@@ -61,12 +61,12 @@ class AddDeckFragment : Fragment() {
             findNavController().navigate(R.id.action_addDeckFragment_to_decksFragment)
 
         } else {
-            Toast.makeText(requireContext(), "Please fill out the name.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Name is incorrect. Please choose different name", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun newDeckInputCheck(deckName: String): Boolean {
-        return !(TextUtils.isEmpty(deckName))
+        return deckViewModel.correctName(deckName)
     }
 
 }

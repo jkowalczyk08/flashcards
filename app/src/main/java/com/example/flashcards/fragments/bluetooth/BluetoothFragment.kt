@@ -21,6 +21,8 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -28,6 +30,7 @@ import com.example.flashcards.R
 import com.example.flashcards.constants.BluetoothConstants
 import com.example.flashcards.databinding.FragmentBluetoothBinding
 import com.example.flashcards.model.DeckParser
+import com.example.flashcards.model.PrimitiveCard
 import com.example.flashcards.services.BluetoothService
 import com.example.flashcards.viewmodels.DeckViewModel
 
@@ -77,26 +80,8 @@ class BluetoothFragment : Fragment() {
                         deckReceivedStringBuilder.append(readMessage)
 
                         // TODO: should include a case where one '^' was read in a previous message
-                        if(readMessage.substring(readMessage.length-2,readMessage.length) == "^^") {
-                            Log.i(TAG, "received full deck")
-                            val deckPair = DeckParser().shareableStringToDeck(deckReceivedStringBuilder.toString())
-                            deckReceivedStringBuilder.clear()
-
-                            val deckName = deckPair.first
-                            val primitiveCards = deckPair.second
-
-                            val builder = AlertDialog.Builder(requireContext())
-                            builder.setPositiveButton("Yes") {_, _ ->
-                                deckViewModel.importDeck(deckName, primitiveCards)
-                                Toast.makeText(requireContext(), "\"$deckName\" Added successfully!", Toast.LENGTH_SHORT).show()
-//                                findNavController().navigate(R.id.action_bluetoothFragment_to_homeFragment)
-                            }
-                            builder.setNegativeButton("No") {_, _ ->
-                                Toast.makeText(requireContext(), "Deck rejected", Toast.LENGTH_SHORT).show()
-                            }
-                            builder.setMessage("You have received \"$deckName\". Do you want to add this deck?")
-                                .create()
-                                .show()
+                        if(readMessage.substring(readMessage.length-1,readMessage.length) == DeckParser().END_OF_DECK) {
+                            processReceivedDeck(deckReceivedStringBuilder)
                         }
                     }
                 }
@@ -113,6 +98,74 @@ class BluetoothFragment : Fragment() {
                     Toast.makeText(requireContext(), "Unable to connect", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        private fun processReceivedDeck(deckReceivedStringBuilder: StringBuilder) {
+            Log.i(TAG, "received full deck")
+            val deckPair = DeckParser().shareableStringToDeck(deckReceivedStringBuilder.toString())
+            deckReceivedStringBuilder.clear()
+
+            var deckName = deckPair.first
+            val primitiveCards = deckPair.second
+
+            createDeckAlertDialog(deckName, primitiveCards)
+        }
+
+        private fun createDeckAlertDialog(deckName: String, primitiveCards: List<PrimitiveCard>) {
+            val builder = AlertDialog.Builder(requireContext())
+            val deckNameEditText = EditText(requireContext())
+            deckNameEditText.setPadding(16,16,16, 8)
+            deckNameEditText.hint = "Deck name"
+            val rejectedDeckNameTextView = TextView(requireContext())
+            builder.setView(deckNameEditText).setView(rejectedDeckNameTextView)
+            val layout = LinearLayout(requireContext())
+            layout.orientation = LinearLayout.VERTICAL
+            layout.addView(deckNameEditText)
+            layout.addView(rejectedDeckNameTextView)
+            layout.setPadding(64,0,64,0)
+
+            builder.setView(layout)
+                .setPositiveButton("Add", null)
+                .setNegativeButton("Reject") {_, _ ->
+                    rejectDeck()
+                }
+                .setMessage("You have received \"$deckName\". Do you want to add this deck?")
+
+            val dialog = builder.create()
+            dialog.show()
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val newName = deckNameEditText.text.toString()
+
+                if(deckViewModel.correctName(newName)) {
+                    acceptDeck(newName, primitiveCards)
+                    dialog.dismiss()
+                }
+                else {
+                    var incorrectReasonMessage = ""
+                    if(!deckViewModel.correctSymbols(newName)) {
+                        incorrectReasonMessage = resources.getString(R.string.incorrect_symbols)
+                    }
+                    else if (!deckViewModel.uniqueName(newName)){
+                        incorrectReasonMessage = resources.getString(R.string.name_in_use)
+                    }
+                    else {
+                        incorrectReasonMessage = resources.getString(R.string.name_is_empty)
+                    }
+                    incorrectReasonMessage = "$incorrectReasonMessage.\nPlease choose different name."
+                    rejectedDeckNameTextView.text = incorrectReasonMessage
+                    rejectedDeckNameTextView.setTextColor(resources.getColor(R.color.red))
+                }
+            }
+        }
+
+        private fun acceptDeck(deckName: String, primitiveCards: List<PrimitiveCard>) {
+            deckViewModel.importDeck(deckName, primitiveCards)
+            Toast.makeText(requireContext(), "\"$deckName\" Added successfully!", Toast.LENGTH_SHORT).show()
+        }
+
+        private fun rejectDeck() {
+            Toast.makeText(requireContext(), "Deck rejected", Toast.LENGTH_SHORT).show()
         }
 
 

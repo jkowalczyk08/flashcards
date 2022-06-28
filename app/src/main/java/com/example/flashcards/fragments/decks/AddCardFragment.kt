@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.flashcards.databinding.FragmentAddCardBinding
 import com.example.flashcards.model.Card
+import com.example.flashcards.model.DeckParser
 import com.example.flashcards.viewmodels.CardViewModel
 import java.util.*
 
@@ -61,13 +62,13 @@ class AddCardFragment : Fragment() {
             cardViewModel.addCard(card)
             Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(requireContext(), "Please fill out front and back.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Front or Back is incorrect. Please fill out front and back.", Toast.LENGTH_SHORT).show()
         }
         binding.editTextBack.text.clear()
         binding.editTextFront.text.clear()
     }
 
     private fun newCardInputCheck(front: String, back: String): Boolean {
-        return !(TextUtils.isEmpty(front)) && !(TextUtils.isEmpty(back))
+        return !(TextUtils.isEmpty(front)) && !(TextUtils.isEmpty(back))  && DeckParser().stringWithoutIncorrectSymbols(front+back)
     }
 }

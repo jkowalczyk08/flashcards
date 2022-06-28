@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.flashcards.databinding.FragmentEditCardBinding
+import com.example.flashcards.model.DeckParser
 import com.example.flashcards.viewmodels.CardViewModel
 
 
@@ -86,11 +87,11 @@ class EditCardFragment : Fragment() {
             val action = EditCardFragmentDirections.actionEditCardFragmentToEditDeckFragment(args.deck)
             findNavController().navigate(action)
         } else {
-            Toast.makeText(requireContext(), "Please fill out front and back.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Front or Back is incorrect. Please fill out front and back.", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun newCardInputCheck(front: String, back: String): Boolean {
-        return !(TextUtils.isEmpty(front)) && !(TextUtils.isEmpty(back))
+        return !(TextUtils.isEmpty(front)) && !(TextUtils.isEmpty(back)) && DeckParser().stringWithoutIncorrectSymbols(front + back)
     }
 }
