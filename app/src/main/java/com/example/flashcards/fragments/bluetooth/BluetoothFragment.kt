@@ -79,7 +79,6 @@ class BluetoothFragment : Fragment() {
 
                         deckReceivedStringBuilder.append(readMessage)
 
-                        // TODO: should include a case where one '^' was read in a previous message
                         if(readMessage.substring(readMessage.length-1,readMessage.length) == DeckParser().END_OF_DECK) {
                             processReceivedDeck(deckReceivedStringBuilder)
                         }
@@ -114,7 +113,7 @@ class BluetoothFragment : Fragment() {
         private fun createDeckAlertDialog(deckName: String, primitiveCards: List<PrimitiveCard>) {
             val builder = AlertDialog.Builder(requireContext())
             val deckNameEditText = EditText(requireContext())
-            deckNameEditText.setPadding(16,16,16, 8)
+            deckNameEditText.setPadding(16,20,16, 20)
             deckNameEditText.hint = "Deck name"
             val rejectedDeckNameTextView = TextView(requireContext())
             builder.setView(deckNameEditText).setView(rejectedDeckNameTextView)
