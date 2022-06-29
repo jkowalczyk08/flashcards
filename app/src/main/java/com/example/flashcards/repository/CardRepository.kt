@@ -52,4 +52,14 @@ class CardRepository(private val cardDao: CardDao) {
     fun getAllFromDeckNotLive(deckId: Int): List<Card> {
         return cardDao.getAllFromDeckNotLive(deckId)
     }
+
+    fun getPendingCount(): Int {
+        return cardDao.getAllNextRevisionSmallerThan(Calendar.getInstance().time).size
+    }
+
+    fun getFinishedCount(): Int {
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DATE, -1)
+        return cardDao.getAllPrevRevisionBiggerThan(calendar.time).size
+    }
 }

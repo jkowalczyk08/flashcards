@@ -37,4 +37,10 @@ interface CardDao {
 
     @Delete
     suspend fun deleteCard(card: Card)
+
+    @Query("SELECT * FROM cards WHERE next_revision <= :date")
+    fun getAllNextRevisionSmallerThan(date: Date): List<Card>
+
+    @Query("SELECT * FROM cards WHERE prev_revision >= :date")
+    fun getAllPrevRevisionBiggerThan(date: Date): List<Card>
 }

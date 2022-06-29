@@ -58,7 +58,9 @@ class AddCardFragment : Fragment() {
         val back = binding.editTextBack.text.toString()
 
         if(newCardInputCheck(front, back)) {
-            val card = Card(0, deckId, front, back, 0, Calendar.getInstance().time)
+            val prevRevision = Calendar.getInstance()
+            prevRevision.add(Calendar.DATE, -5)
+            val card = Card(0, deckId, front, back, 0, Calendar.getInstance().time, prevRevision.time)
             cardViewModel.addCard(card)
             Toast.makeText(requireContext(), "Successfully added!", Toast.LENGTH_SHORT).show()
         } else {

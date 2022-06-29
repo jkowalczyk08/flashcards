@@ -47,4 +47,12 @@ class CardViewModel(application: Application) : AndroidViewModel(application) {
             repository.deleteCard(card)
         }
     }
+
+    fun getPendingCount(): Int {
+        return repository.getPendingCount()
+    }
+
+    fun getFinishedCount(): Int {
+        return repository.getFinishedCount()
+    }
 }

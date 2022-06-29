@@ -9,7 +9,7 @@ import com.example.flashcards.model.Card
 import com.example.flashcards.model.Converters
 import com.example.flashcards.model.Deck
 
-@Database(entities = [Card::class, Deck::class], version = 6, exportSchema = false)
+@Database(entities = [Card::class, Deck::class], version = 7, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
 

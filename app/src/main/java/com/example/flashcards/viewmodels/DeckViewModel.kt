@@ -59,8 +59,10 @@ class DeckViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val deckId = repository.getDecksIdsForName(deckName)[0]
 
+                val prevRevision = Calendar.getInstance()
+                prevRevision.add(Calendar.DATE, -5)
                 for(card in primitiveCards) {
-                    cardRepository.addCard(Card(0, deckId, card.front, card.back, 0,  Calendar.getInstance().time))
+                    cardRepository.addCard(Card(0, deckId, card.front, card.back, 0,  Calendar.getInstance().time, prevRevision.time))
                 }
             } catch(e: Exception) {
                 Log.e(TAG, "imported deck was not added to database", e)
