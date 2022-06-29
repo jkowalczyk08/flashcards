@@ -22,10 +22,6 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private var pendingCount = 0
-    private var finishedCount = 0
-    private lateinit var cardViewModel: CardViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,12 +30,7 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        cardViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
-        pendingCount = cardViewModel.getPendingCount()
-        finishedCount = cardViewModel.getFinishedCount()
-        Log.i(TAG, "pending count = $pendingCount, finishedCount = $finishedCount")
-
-        // TODO show pending and finished count
+        displayStatistics(view)
 
         binding.decksButton.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_decksFragment)
@@ -54,5 +45,14 @@ class HomeFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun displayStatistics(view: View) {
+        val cardViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
+        val pendingCount = cardViewModel.getPendingCount()
+        val finishedCount = cardViewModel.getFinishedCount()
+        Log.i(TAG, "pending count = $pendingCount, finishedCount = $finishedCount")
+        binding.finishedCountTextView.text = finishedCount.toString()
+        binding.pendingCountTextView.text = pendingCount.toString()
     }
 }

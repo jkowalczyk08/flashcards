@@ -122,8 +122,13 @@ class LearnDeckFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
+        saveProgress()
+    }
+
+    private fun saveProgress() {
+        Log.i(TAG, "saving progress")
         lifecycleScope.launch(Dispatchers.IO) {
             repository.updateCards(learningList.getCards())
         }

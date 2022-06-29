@@ -29,5 +29,6 @@
     <string name="incorrect_symbols">Name contains incorrect symbols</string>
     <string name="name_in_use">Name is already in use</string>
     <string name="name_is_empty">Name is empty</string>
+    <string name="statistics_message">Daily statistics</string>
 
 </resources>

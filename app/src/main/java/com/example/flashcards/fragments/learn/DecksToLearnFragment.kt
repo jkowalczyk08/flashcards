@@ -1,6 +1,7 @@
 package com.example.flashcards.fragments.learn
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,13 @@ import com.example.flashcards.R
 import com.example.flashcards.data.AppDatabase
 import com.example.flashcards.databinding.FragmentDecksToLearnBinding
 import com.example.flashcards.repository.CardRepository
+import com.example.flashcards.viewmodels.CardViewModel
 import com.example.flashcards.viewmodels.DeckViewModel
 import java.util.*
 
 
 class DecksToLearnFragment : Fragment() {
+    private val TAG = "DecksToLearnFragment"
 
     private var _binding: FragmentDecksToLearnBinding? = null
     private val binding get() = _binding!!
@@ -42,6 +45,8 @@ class DecksToLearnFragment : Fragment() {
         _binding = FragmentDecksToLearnBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        displayStatistics(view)
+
         //RecyclerView of decks
         val adapter = LearningDecksListAdapter()
         val recyclerView = binding.learningDecksRecyclerView
@@ -64,5 +69,14 @@ class DecksToLearnFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun displayStatistics(view: View) {
+        val cardViewModel = ViewModelProvider(this).get(CardViewModel::class.java)
+        val pendingCount = cardViewModel.getPendingCount()
+        val finishedCount = cardViewModel.getFinishedCount()
+        Log.i(TAG, "pending count = $pendingCount, finishedCount = $finishedCount")
+        binding.finishedCountTextView.text = finishedCount.toString()
+        binding.pendingCountTextView.text = pendingCount.toString()
     }
 }
