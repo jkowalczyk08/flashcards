@@ -29,9 +29,9 @@ data class Card(
     @NonNull @ColumnInfo(name = "prev_revision") var prevRevision: Date
     ) : Parcelable {
 
-    fun updateEvaluation(evaluation: Evaluation) {
+    fun updateEvaluation(evaluation: Evaluation, prevRev: Date) {
         score = evaluation.newScore
-        prevRevision = Calendar.getInstance().time
+        prevRevision = prevRev
         nextRevision = evaluation.newRevisionDate
     }
 }

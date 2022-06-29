@@ -2,6 +2,7 @@ package com.example.flashcards.model
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.util.*
 
 class LearningList(val scoreCalculator: ScoreCalculator) : Learnable {
 
@@ -39,11 +40,13 @@ class LearningList(val scoreCalculator: ScoreCalculator) : Learnable {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun logAnswer(progress: Progress) {
         val evaluation = scoreCalculator.evaluateAnswer(progress, list[index].card.score)
+        var prevRev = list[index].card.prevRevision
         if(evaluation.finished) {
             list[index].finished = true
             activeCount--
+            prevRev = Calendar.getInstance().time
         }
-        list[index].card.updateEvaluation(evaluation)
+        list[index].card.updateEvaluation(evaluation, prevRev)
     }
 
     override fun getCards() : List<Card> {
